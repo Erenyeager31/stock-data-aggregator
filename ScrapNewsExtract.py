@@ -77,7 +77,8 @@ def ScrapNewsExtract(URLdata,driver,keyword):
         return {
             'status':True,
             'message':"Data fetched successfully",
-            'data':extracted_data
+            'data':extracted_data,
+            'filepath':f'./ScrappedData/extracted_{keyword}_{dateend}.json'
         }
     
     except Exception as e:
