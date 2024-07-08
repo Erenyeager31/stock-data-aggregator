@@ -6,10 +6,19 @@ from selenium.webdriver.common.action_chains import ActionChains
 from simple_chalk import chalk
 import json
 import time
+from datetime import date
 
 # div for obtain the tweets
 # css-175oi2r r-1iusvr4 r-16y2uox r-1777fci r-kzbkwu
 # css-146c3p1 r-8akbws r-krxsd3 r-dnmrzs r-1udh08x r-bcqeeo r-1ttztb7 r-qvutc0 r-37j5jr r-a023e6 r-rjixqe r-16dba41 r-bnwqim
+
+def calculateDateParams():
+    today = date.today()
+    dateend = str(today).split('-')
+    dateend.reverse() # conversion to dd-mm-yyyy format in list
+    dateend = '-'.join(dateend) # convert back to string
+
+    return dateend
 
 def Search(keyword,driver):
     try:
@@ -92,6 +101,7 @@ while the later one manages to scrap the required amount
 
 def ScrapTweet(driver, keyword, tweet_count=15):
     try:
+        date = calculateDateParams()
         all_tweets = []
         while len(all_tweets) < tweet_count:
             tweets = WebDriverWait(driver, 10).until(
@@ -149,14 +159,14 @@ def ScrapTweet(driver, keyword, tweet_count=15):
             time.sleep(2)  # wait for tweets to load
 
         # Save tweets to JSON file
-        with open(f'./ScrappedData/TweetData_{keyword}.json', 'w', encoding='utf-8') as file:
+        with open(f'../data/ScrappedTweets/TweetData_{keyword}_{date}.json', 'w', encoding='utf-8') as file:
             jsonString = json.dumps(all_tweets, ensure_ascii=False)
             file.write(jsonString)
             print(chalk.green('Saved to file successfully'))
 
             return {
                 "status":True,
-                "filePath":'./ScrappedData/TweetData_{keyword}.json'
+                "filePath":f'../data/ScrappedTweets/TweetData_{keyword}_{date}.json'
             }
         
     except Exception as e:

@@ -62,7 +62,7 @@ def ScrapNews(keyword,driver):
             }
             all_urls.append(data)
 
-        with open('./ScrappedData/AnchorTags.json','w',encoding='utf-8') as file:
+        with open(f'../data/ScrappedNews/URL_{keyword}_{dateend}.json','w',encoding='utf-8') as file:
             dataString = json.dumps(all_urls,ensure_ascii=False)
             file.write(dataString)
             print(chalk.green('Anchor tags retrieved succesfully'))

@@ -69,7 +69,7 @@ def ScrapNewsExtract(URLdata,driver,keyword):
 
             extracted_data.append(datatoinsert)
 
-        with open(f'./ScrappedData/extracted_{keyword}_{dateend}.json','w',encoding='utf-8') as file:
+        with open(f'../data/ScrappedNews/extracted_{keyword}_{dateend}.json','w',encoding='utf-8') as file:
             datastring = json.dumps(extracted_data,ensure_ascii=False)
             file.write(datastring)
             print(chalk.red('Data saved succesfully'))
@@ -78,7 +78,7 @@ def ScrapNewsExtract(URLdata,driver,keyword):
             'status':True,
             'message':"Data fetched successfully",
             'data':extracted_data,
-            'filepath':f'./ScrappedData/extracted_{keyword}_{dateend}.json'
+            'filepath':f'../data/ScrappedNews/extracted_{keyword}_{dateend}.json'
         }
     
     except Exception as e:

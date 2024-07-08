@@ -1,7 +1,8 @@
-from Xlogin import login_to_website
-from SearchXTags import Search
-from ScrapNewsURLs import ScrapNews
-from ScrapNewsExtract import ScrapNewsExtract
+from scripts.Xlogin import login_to_website
+from scripts.SearchXTags import Search
+from scripts.ScrapNewsURLs import ScrapNews
+from scripts.ScrapNewsExtract import ScrapNewsExtract
+from MachineLearning.SentimentAnalysis import sentiment_analysis
 from inference import NERinferenceAPI
 from selenium import webdriver
 from selenium.webdriver import ChromeOptions
@@ -30,9 +31,11 @@ app = Flask( __name__)
 @app.route('/',methods=['GET','POST'])
 def home():
     if(request.method == 'GET'):
-        args = request.args.get('test')
-        data = args
-        return jsonify({"data":data})
+        # args = request.args.get('test')
+        # data = args
+        return {
+            'message':'The server is running succesfully'
+        }
 
 @app.route('/scraptweets',methods=['GET','POST'])
 def ScrapTweets():
@@ -75,18 +78,17 @@ def ScrapNewsApi():
             driver.quit()
             return scrapNewsURLResponse
 
-@app.route('/inference',methods=['GET','POST'])
+@app.route('/SentimentAnalysis',methods=['GET','POST'])
 def Inference():
     if(request.method == 'GET'):
         filePath = request.args.get('filepath')
-        print(chalk.green(filePath))
+        filePath = './data/ScrappedNews/extracted_RVNL_05-07-2024.json'
         with open(filePath, 'r', encoding='utf-8') as file:
             data = json.load(file)
-        inferenceResponse = NERinferenceAPI(data)
-        pprint(chalk.magenta(inferenceResponse))
-        return {
-            'message':inferenceResponse
-        }
+        # inferenceResponse = SentimentAnalysis(data)
+        sentiment_response = sentiment_analysis(data)
+        # pprint(chalk.magenta(inferenceResponse))
+        return sentiment_response
 
 if __name__ == "__main__":
-    app.run(debug = True)     
+    app.run(debug = True)
