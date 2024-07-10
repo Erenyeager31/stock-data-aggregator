@@ -15,16 +15,6 @@ from simple_chalk import chalk
 
 load_dotenv()
 
-# options for selenium driver
-options = ChromeOptions();
-options.add_argument("--headless=new")
-options.page_load_strategy = 'eager'
-options.add_argument("--disable-blink-features=AutomationControlled")
-options.add_argument("--headless")  # Run Chrome in headless mode
-options.add_argument("--disable-gpu")
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-dev-shm-usage")
-
 # creating the flask app
 app = Flask( __name__)
 
@@ -40,6 +30,8 @@ def home():
 @app.route('/scraptweets',methods=['GET','POST'])
 def ScrapTweets():
     if(request.method == 'GET'):
+        options = ChromeOptions();
+        options.add_argument("--headless=new")
         keyword = request.args.get('keyword')
         username = os.getenv('USERNAMET')
         email = os.getenv('EMAIL')
@@ -50,18 +42,33 @@ def ScrapTweets():
         #? Performing X scrapping -->
         # attempt login of the twitter account
         jsonRes = login_to_website(username, email, password,driver)
-        
+
+        print(chalk.red('here'))
         # if login not successfull quit the driver
         if not jsonRes['status']:
+            print(chalk.green('here'))
             driver.quit()
+            return jsonRes
         else:
+            print(chalk.yellow('here'))
             tweetScrapeResponse = Search(keyword,driver)
             driver.quit()
             return tweetScrapeResponse
+    else:
+        return {
+            'status':False
+        }
 
 @app.route('/scrapNews',methods=['GET','POST'])
 def ScrapNewsApi():
     if(request.method == 'GET'):
+        options = ChromeOptions();
+        options.page_load_strategy = 'eager'
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_argument("--headless")  # Run Chrome in headless mode
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
         keyword = request.args.get('keyword')
         driver = webdriver.Chrome(options=options)
         scrapNewsURLResponse = ScrapNews(keyword,driver)
