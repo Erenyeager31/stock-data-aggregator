@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from simple_chalk import chalk
-import json,os
+import json,os,time
 from datetime import date
 
 # div for obtain the tweets
@@ -45,11 +45,13 @@ def Search(keyword,driver):
         print('Try catch block has ended')
 
 def enterKeyword(keyword,driver):
-    searchField = WebDriverWait(driver,10).until(
-        EC.presence_of_element_located((By.XPATH,"//input[@class='r-30o5oe r-1dz5y72 r-1niwhzg r-17gur6a r-1yadl64 r-deolkf r-homxoj r-poiln3 r-7cikom r-1ny4l3l r-xyw6el r-13qz1uu r-fdjqy7']"))
-    )
+    # searchField = WebDriverWait(driver,10).until(
+    #     EC.presence_of_element_located((By.XPATH,"//input[@class='r-30o5oe r-1dz5y72 r-1niwhzg r-17gur6a r-1yadl64 r-deolkf r-homxoj r-poiln3 r-7cikom r-1ny4l3l r-xyw6el r-13qz1uu r-fdjqy7']"))
+    # )
 
-    searchField.send_keys(keyword+'\n')
+    # searchField.send_keys(keyword+'\n')
+    url = f'https://x.com/search?q={keyword}&src=typed_query&f=live'
+    driver.get(url)
 
 def ScrapTweet(driver, keyword, tweet_count=15):
     try:
